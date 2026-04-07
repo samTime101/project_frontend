@@ -46,11 +46,11 @@ export default function SignupPage() {
 
   return (
     <div className="auth-container">
-      <div className="glass-panel auth-form">
+      <div className="md-card auth-form">
         <h2 className="text-center mb-4">Create Account</h2>
         <p className="text-center text-secondary mb-4">Start managing your expenses</p>
         
-        {error && <div className="glass-panel mb-4 text-danger text-center" style={{padding: '0.75rem', borderColor: 'var(--danger-color)'}}>{error}</div>}
+        {error && <div className="md-card mb-4 text-danger text-center" style={{padding: '0.75rem', borderColor: 'var(--danger-color)'}}>{error}</div>}
         
         <form onSubmit={handleSignup}>
           <div className="flex gap-4 mb-4">
@@ -58,7 +58,7 @@ export default function SignupPage() {
               <label>First Name</label>
               <input 
                 name="first_name"
-                className="glass-input" 
+                className="md-input" 
                 value={formData.first_name}
                 onChange={handleChange}
                 required 
@@ -68,7 +68,7 @@ export default function SignupPage() {
               <label>Last Name</label>
               <input 
                 name="last_name"
-                className="glass-input" 
+                className="md-input" 
                 value={formData.last_name}
                 onChange={handleChange}
                 required 
@@ -80,7 +80,7 @@ export default function SignupPage() {
             <input 
               type="email" 
               name="email"
-              className="glass-input" 
+              className="md-input" 
               value={formData.email}
               onChange={handleChange}
               required 
@@ -91,13 +91,13 @@ export default function SignupPage() {
             <input 
               type="password" 
               name="password"
-              className="glass-input" 
+              className="md-input" 
               value={formData.password}
               onChange={handleChange}
               required 
             />
           </div>
-          <button type="submit" className="glass-button w-full mt-4" disabled={loading}>
+          <button type="submit" className="md-button w-full mt-4" disabled={loading}>
             {loading ? 'Creating Account...' : 'Sign Up'}
           </button>
         </form>

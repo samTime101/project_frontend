@@ -12,7 +12,7 @@ export default function Layout() {
 
   return (
     <>
-      <nav className="glass-panel" style={{ borderRadius: '0 0 16px 16px', borderTop: 'none', marginBottom: '2rem' }}>
+      <nav>
         <div className="flex justify-between items-center w-full">
           <div className="flex items-center gap-3">
             <img src="https://bicnepal.edu.np/images/logo.svg" alt="Logo" style={{height: '32px', filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.2))'}} />
@@ -25,7 +25,7 @@ export default function Layout() {
             <Link to="/expenses" className={`nav-link flex items-center gap-2 ${location.pathname === '/expenses' ? 'active' : ''}`}>
               <Receipt size={18} /> Expenses
             </Link>
-            <button onClick={handleLogout} className="glass-button secondary icon-only ml-4 text-danger" title="Logout">
+            <button onClick={handleLogout} className="md-button icon-only ml-4 text-danger" title="Logout">
               <LogOut size={18} />
             </button>
           </div>

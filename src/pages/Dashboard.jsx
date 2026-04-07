@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getExpenses } from '../services/expense.service';
-import { PlusCircle, MinusCircle, ArrowRight } from 'lucide-react';
+import { PlusCircle, MinusCircle, ArrowRight, TrendingUp, TrendingDown } from 'lucide-react';
 
 export default function Dashboard() {
   const [expenses, setExpenses] = useState([]);
@@ -38,24 +38,24 @@ export default function Dashboard() {
   return (
     <div>
       <div className="dashboard-grid">
-        <div className="glass-panel">
+        <div className="md-card">
           <h3 className="text-secondary flex items-center gap-2"><PlusCircle size={20} className="text-success" /> Income (Recent)</h3>
           <h2>NPR {summary.income.toFixed(2)}</h2>
         </div>
-        <div className="glass-panel">
+        <div className="md-card">
           <h3 className="text-secondary flex items-center gap-2"><MinusCircle size={20} className="text-danger" /> Expenses (Recent)</h3>
           <h2>NPR {summary.expense.toFixed(2)}</h2>
         </div>
-        <div className="glass-panel" style={{ background: summary.balance >= 0 ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)'}}>
+        <div className="md-card" style={{ background: summary.balance >= 0 ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)'}}>
           <h3 className="text-secondary">Balance (Recent)</h3>
           <h2>NPR {summary.balance.toFixed(2)}</h2>
         </div>
       </div>
 
-      <div className="glass-panel">
+      <div className="md-card">
         <div className="flex justify-between items-center mb-4">
           <h3>Recent Expenses</h3>
-          <Link to="/expenses" className="glass-button secondary">View All <ArrowRight size={16}/></Link>
+          <Link to="/expenses" className="md-button secondary">View All <ArrowRight size={16}/></Link>
         </div>
         
         {expenses.length === 0 ? (
@@ -63,13 +63,14 @@ export default function Dashboard() {
         ) : (
           <div className="transaction-list">
             {expenses.map(expense => (
-              <div key={expense.id} className="flex justify-between items-center glass-panel" style={{marginBottom: '0.5rem', padding: '1rem'}}>
+              <div key={expense.id} className="flex justify-between items-center md-card" style={{marginBottom: '0.5rem', padding: '1rem', boxShadow: 'none', border: '1px solid rgba(255,255,255,0.05)'}}>
                 <div>
                   <h4 style={{marginBottom: '0.2rem'}}>{expense.description || expense.category}</h4>
                   <small className="text-secondary">{expense.date ? new Date(expense.date).toLocaleDateString() : 'N/A'}</small>
                 </div>
-                <h3 className={expense.type === 'Income' ? 'text-success' : 'text-danger'}>
-                  {expense.type === 'Income' ? '+' : '-'}NPR {parseFloat(expense.amount).toFixed(2)}
+                <h3 className={`flex items-center gap-1 ${expense.type === 'Income' ? 'text-success' : 'text-danger'}`}>
+                  {expense.type === 'Income' ? <TrendingUp size={20} /> : <TrendingDown size={20} />} 
+                  NPR {parseFloat(expense.amount).toFixed(2)}
                 </h3>
               </div>
             ))}

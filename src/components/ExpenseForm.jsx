@@ -73,13 +73,13 @@ export default function ExpenseForm({ expenseId, onSuccess, onCancel }) {
   return (
     <div>
       <h2 className="mb-4">{expenseId ? 'Edit Expense' : 'New Expense'}</h2>
-      {error && <div className="glass-panel mb-4 text-danger text-center shadow-none">{error}</div>}
+      {error && <div className="md-card mb-4 text-danger text-center shadow-none">{error}</div>}
       
       <form onSubmit={handleSubmit}>
         <div className="flex gap-4 mb-4">
           <div className="form-group w-full">
             <label>Type</label>
-            <select name="type" className="glass-input" value={formData.type} onChange={handleChange}>
+            <select name="type" className="md-input" value={formData.type} onChange={handleChange}>
               <option value="Expense">Expense</option>
               <option value="Income">Income</option>
             </select>
@@ -90,7 +90,7 @@ export default function ExpenseForm({ expenseId, onSuccess, onCancel }) {
               type="number" 
               step="0.01"
               name="amount" 
-              className="glass-input" 
+              className="md-input" 
               value={formData.amount}
               onChange={handleChange}
               required 
@@ -103,7 +103,7 @@ export default function ExpenseForm({ expenseId, onSuccess, onCancel }) {
           <input 
             name="category" 
             list="default-categories"
-            className="glass-input" 
+            className="md-input" 
             maxLength={50}
             value={formData.category}
             onChange={handleChange}
@@ -122,7 +122,7 @@ export default function ExpenseForm({ expenseId, onSuccess, onCancel }) {
           <label>Description</label>
           <textarea 
             name="description" 
-            className="glass-input" 
+            className="md-input" 
             value={formData.description}
             onChange={handleChange}
             rows={3}
@@ -130,8 +130,8 @@ export default function ExpenseForm({ expenseId, onSuccess, onCancel }) {
         </div>
 
         <div className="flex justify-end gap-2 mt-4">
-          <button type="button" className="glass-button secondary" onClick={onCancel} disabled={loading}>Cancel</button>
-          <button type="submit" className="glass-button" disabled={loading}>
+          <button type="button" className="md-button secondary" onClick={onCancel} disabled={loading}>Cancel</button>
+          <button type="submit" className="md-button" disabled={loading}>
             {loading ? 'Saving...' : 'Save'}
           </button>
         </div>

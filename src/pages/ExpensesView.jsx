@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getExpenses, deleteExpense } from '../services/expense.service';
 import ExpenseForm from '../components/ExpenseForm';
-import { Plus, Trash2, Edit } from 'lucide-react';
+import { Plus, Trash2, Edit, TrendingUp, TrendingDown } from 'lucide-react';
 
 export default function ExpensesView() {
   const [expenses, setExpenses] = useState([]);
@@ -54,17 +54,17 @@ export default function ExpensesView() {
       <div className="flex justify-between items-center mb-4">
         <h2>Expenses</h2>
         <button 
-          className="glass-button"
+          className="md-button"
           onClick={() => { setEditingId(null); setShowModal(true); }}
         >
           <Plus size={18} /> Add New
         </button>
       </div>
 
-      <div className="glass-panel mb-4 flex gap-4 items-center">
+      <div className="md-card mb-4 flex gap-4 items-center">
         <label className="text-secondary">Filter by Type:</label>
         <select 
-          className="glass-input" 
+          className="md-input" 
           style={{width: 'auto'}} 
           value={params.type} 
           onChange={(e) => setParams({...params, type: e.target.value, page: 1})}
@@ -75,7 +75,7 @@ export default function ExpensesView() {
         </select>
       </div>
 
-      <div className="glass-panel">
+      <div className="md-card">
         {loading ? (
           <div className="text-center">Loading...</div>
         ) : expenses.length === 0 ? (
@@ -84,7 +84,7 @@ export default function ExpensesView() {
           <div style={{overflowX: 'auto'}}>
             <table style={{width: '100%', borderCollapse: 'collapse', textAlign: 'left'}}>
               <thead>
-                <tr style={{borderBottom: '1px solid var(--glass-border)'}}>
+                <tr style={{borderBottom: '2px solid var(--border-color)'}}>
                   <th style={{padding: '1rem'}}>Date</th>
                   <th style={{padding: '1rem'}}>Category</th>
                   <th style={{padding: '1rem'}}>Type</th>
@@ -98,15 +98,16 @@ export default function ExpensesView() {
                     <td style={{padding: '1rem'}}>{exp.date ? new Date(exp.date).toLocaleDateString() : 'N/A'}</td>
                     <td style={{padding: '1rem'}}>{exp.category}</td>
                     <td style={{padding: '1rem'}}>
-                      <span className={exp.type === 'Income' ? 'text-success' : 'text-danger'}>
+                      <span className={`flex items-center gap-1 ${exp.type === 'Income' ? 'text-success' : 'text-danger'}`}>
+                        {exp.type === 'Income' ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
                         {exp.type}
                       </span>
                     </td>
                     <td style={{padding: '1rem'}} className="text-accent">NPR {parseFloat(exp.amount).toFixed(2)}</td>
                     <td style={{padding: '1rem'}}>
                       <div className="flex gap-2">
-                        <button className="glass-button secondary icon-only" onClick={() => handleEdit(exp.id)}><Edit size={16}/></button>
-                        <button className="glass-button secondary icon-only text-danger" onClick={() => handleDelete(exp.id)}><Trash2 size={16}/></button>
+                        <button className="md-button secondary icon-only" onClick={() => handleEdit(exp.id)}><Edit size={16}/></button>
+                        <button className="md-button secondary icon-only text-danger" onClick={() => handleDelete(exp.id)}><Trash2 size={16}/></button>
                       </div>
                     </td>
                   </tr>
@@ -118,7 +119,7 @@ export default function ExpensesView() {
         
         <div className="flex justify-between mt-4">
           <button 
-            className="glass-button secondary" 
+            className="md-button secondary" 
             disabled={params.page === 1}
             onClick={() => setParams({...params, page: params.page - 1})}
           >
@@ -126,7 +127,7 @@ export default function ExpensesView() {
           </button>
           <span>Page {params.page} of {totalPages}</span>
           <button 
-            className="glass-button secondary" 
+            className="md-button secondary"
             disabled={params.page >= totalPages}
             onClick={() => setParams({...params, page: params.page + 1})}
           >
@@ -141,7 +142,7 @@ export default function ExpensesView() {
           background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)',
           display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100
         }}>
-          <div className="glass-panel" style={{width: '90%', maxWidth: '500px'}}>
+          <div className="md-card" style={{width: '90%', maxWidth: '500px'}}>
             <ExpenseForm 
               expenseId={editingId} 
               onSuccess={handleFormSuccess} 

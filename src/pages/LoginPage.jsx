@@ -25,18 +25,18 @@ export default function LoginPage() {
 
   return (
     <div className="auth-container">
-      <div className="glass-panel auth-form">
+      <div className="md-card auth-form">
         <h2 className="text-center mb-4">Welcome Back</h2>
         <p className="text-center text-secondary mb-4">Sign in to your account</p>
         
-        {error && <div className="glass-panel mb-4 text-danger text-center" style={{padding: '0.75rem', borderColor: 'var(--danger-color)'}}>{error}</div>}
+        {error && <div className="md-card mb-4 text-danger text-center" style={{padding: '0.75rem', borderColor: 'var(--danger-color)'}}>{error}</div>}
         
         <form onSubmit={handleLogin}>
           <div className="form-group">
             <label>Email</label>
             <input 
               type="email" 
-              className="glass-input" 
+              className="md-input" 
               value={email}
               onChange={e => setEmail(e.target.value)}
               required 
@@ -46,13 +46,13 @@ export default function LoginPage() {
             <label>Password</label>
             <input 
               type="password" 
-              className="glass-input" 
+              className="md-input" 
               value={password}
               onChange={e => setPassword(e.target.value)}
               required 
             />
           </div>
-          <button type="submit" className="glass-button w-full mt-4" disabled={loading}>
+          <button type="submit" className="md-button w-full mt-4" disabled={loading}>
             {loading ? 'Signing In...' : 'Sign In'}
           </button>
         </form>
