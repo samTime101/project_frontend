@@ -52,7 +52,7 @@ export default function ExpensesView() {
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <h2>Transactions</h2>
+        <h2>Expenses</h2>
         <button 
           className="glass-button"
           onClick={() => { setEditingId(null); setShowModal(true); }}
@@ -102,7 +102,7 @@ export default function ExpensesView() {
                         {exp.type}
                       </span>
                     </td>
-                    <td style={{padding: '1rem'}} className="text-accent">${parseFloat(exp.amount).toFixed(2)}</td>
+                    <td style={{padding: '1rem'}} className="text-accent">NPR {parseFloat(exp.amount).toFixed(2)}</td>
                     <td style={{padding: '1rem'}}>
                       <div className="flex gap-2">
                         <button className="glass-button secondary icon-only" onClick={() => handleEdit(exp.id)}><Edit size={16}/></button>

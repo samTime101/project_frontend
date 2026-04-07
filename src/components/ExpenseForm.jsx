@@ -43,6 +43,7 @@ export default function ExpenseForm({ expenseId, onSuccess, onCancel }) {
       const payload = {
         ...formData,
         amount: parseFloat(formData.amount).toFixed(2),
+        date: new Date().toISOString()
       };
       
       if (expenseId) {
@@ -52,12 +53,17 @@ export default function ExpenseForm({ expenseId, onSuccess, onCancel }) {
       }
       onSuccess();
     } catch (err) {
+      console.error(err);
       const errors = err.response?.data;
-      if (errors) {
+      if (errors && typeof errors === 'object' && !Array.isArray(errors)) {
         const msgs = Object.keys(errors).map(k => `${k}: ${errors[k]}`).join(' | ');
         setError(msgs);
+      } else if (typeof errors === 'string') {
+        setError(`Server Error (${err.response?.status}): Check console for details`);
+      } else if (Array.isArray(errors)) {
+        setError(errors.join(' | '));
       } else {
-        setError('Operation failed');
+        setError(err.message || 'Operation failed');
       }
     } finally {
       setLoading(false);
@@ -66,7 +72,7 @@ export default function ExpenseForm({ expenseId, onSuccess, onCancel }) {
 
   return (
     <div>
-      <h2 className="mb-4">{expenseId ? 'Edit Transaction' : 'New Transaction'}</h2>
+      <h2 className="mb-4">{expenseId ? 'Edit Expense' : 'New Expense'}</h2>
       {error && <div className="glass-panel mb-4 text-danger text-center shadow-none">{error}</div>}
       
       <form onSubmit={handleSubmit}>
@@ -96,12 +102,20 @@ export default function ExpenseForm({ expenseId, onSuccess, onCancel }) {
           <label>Category</label>
           <input 
             name="category" 
+            list="default-categories"
             className="glass-input" 
             maxLength={50}
             value={formData.category}
             onChange={handleChange}
             required 
           />
+          <datalist id="default-categories">
+            <option value="Food & Dining" />
+            <option value="Transportation" />
+            <option value="Utilities" />
+            <option value="Entertainment" />
+            <option value="Healthcare" />
+          </datalist>
         </div>
 
         <div className="form-group">

@@ -14,13 +14,16 @@ export default function Layout() {
     <>
       <nav className="glass-panel" style={{ borderRadius: '0 0 16px 16px', borderTop: 'none', marginBottom: '2rem' }}>
         <div className="flex justify-between items-center w-full">
-          <h2><span className="text-accent">Expense</span>Tracker</h2>
+          <div className="flex items-center gap-3">
+            <img src="https://bicnepal.edu.np/images/logo.svg" alt="Logo" style={{height: '32px', filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.2))'}} />
+            <h2 style={{margin: 0}}><span className="text-accent">Expenser</span></h2>
+          </div>
           <div className="nav-links flex items-center">
             <Link to="/" className={`nav-link flex items-center gap-2 ${location.pathname === '/' ? 'active' : ''}`}>
               <LayoutDashboard size={18} /> Dashboard
             </Link>
             <Link to="/expenses" className={`nav-link flex items-center gap-2 ${location.pathname === '/expenses' ? 'active' : ''}`}>
-              <Receipt size={18} /> Transactions
+              <Receipt size={18} /> Expenses
             </Link>
             <button onClick={handleLogout} className="glass-button secondary icon-only ml-4 text-danger" title="Logout">
               <LogOut size={18} />

@@ -27,12 +27,17 @@ export default function SignupPage() {
       await login(formData.email, formData.password);
       navigate('/');
     } catch (err) {
-      if (err.response?.data) {
-        const errObj = err.response.data;
-        const msgs = Object.keys(errObj).map(key => `${key}: ${errObj[key]}`).join(' | ');
+      console.error(err);
+      const errors = err.response?.data;
+      if (errors && typeof errors === 'object' && !Array.isArray(errors)) {
+        const msgs = Object.keys(errors).map(k => `${k}: ${errors[k]}`).join(' | ');
         setError(msgs);
+      } else if (typeof errors === 'string') {
+        setError(`Server Error (${err.response?.status}): Check console`);
+      } else if (Array.isArray(errors)) {
+        setError(errors.join(' | '));
       } else {
-        setError('Signup failed. Please try again.');
+        setError(err.message || 'Signup failed. Please try again.');
       }
     } finally {
       setLoading(false);
