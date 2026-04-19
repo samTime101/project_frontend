@@ -91,6 +91,16 @@ p, small {
   border-bottom-color: var(--accent-primary);
 }
 
+/* SAMIP REGMI: Fix the invisible and bad UI of selection */
+select.md-input {
+  color: var(--text-primary);
+}
+
+select.md-input option {
+  color: #202124;
+  background-color: #ffffff;
+}
+
 /* Material Buttons */
 .md-button {
   background-color: var(--accent-primary);
