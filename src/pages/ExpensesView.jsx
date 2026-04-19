@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { getExpenses, deleteExpense } from '../services/expense.service';
 import ExpenseForm from '../components/ExpenseForm';
-import { Plus, Trash2, Edit, TrendingUp, TrendingDown } from 'lucide-react';
+// Samip Regmi: Removed trending up and down icons are they are not looking good currently
+// import { Plus, Trash2, Edit, TrendingUp, TrendingDown } from 'lucide-react';
+import { Plus, Trash2, Edit, } from 'lucide-react';
 
 export default function ExpensesView() {
   const [expenses, setExpenses] = useState([]);
@@ -99,7 +101,7 @@ export default function ExpensesView() {
                     <td style={{padding: '1rem'}}>{exp.category}</td>
                     <td style={{padding: '1rem'}}>
                       <span className={`flex items-center gap-1 ${exp.type === 'Income' ? 'text-success' : 'text-danger'}`}>
-                        {exp.type === 'Income' ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
+                        {/* {exp.type === 'Income' ? <TrendingUp size={16} /> : <TrendingDown size={16} />} */}
                         {exp.type}
                       </span>
                     </td>
