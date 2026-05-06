@@ -1,23 +1,24 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
-import { login } from '../services/auth.service';
 
-export default function LoginPage() {
+const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
+    setError('');
     setLoading(true);
     try {
-      await login(email, password);
+      await login({ email, password });
       navigate('/');
     } catch (err) {
-      setError(err.response?.data?.detail || 'Login failed. Please check your credentials.');
+      setError(err.response?.data?.detail || 'Failed to login. Please check your credentials.');
     } finally {
       setLoading(false);
     }
@@ -25,42 +26,67 @@ export default function LoginPage() {
 
   return (
     <div className="auth-container">
-      <div className="md-card auth-form">
-        <h2 className="text-center mb-4">Welcome Back</h2>
-        <p className="text-center text-secondary mb-4">Sign in to your account</p>
-        
-        {error && <div className="md-card mb-4 text-danger text-center" style={{padding: '0.75rem', borderColor: 'var(--danger-color)'}}>{error}</div>}
-        
-        <form onSubmit={handleLogin}>
-          <div className="form-group">
-            <label>Email</label>
-            <input 
-              type="email" 
-              className="md-input" 
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              required 
-            />
-          </div>
-          <div className="form-group">
-            <label>Password</label>
-            <input 
-              type="password" 
-              className="md-input" 
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              required 
-            />
-          </div>
-          <button type="submit" className="md-button w-full mt-4" disabled={loading}>
-            {loading ? 'Signing In...' : 'Sign In'}
-          </button>
-        </form>
-        
-        <p className="text-center mt-4">
-          Don't have an account? <Link to="/signup" className="text-accent">Sign Up</Link>
-        </p>
+      <div className="auth-brand-side">
+        <h1 className="brand-logo">EXPENSER</h1>
+        <p className="brand-slogan">track. save. grow.</p>
+        <div style={{ marginTop: '50px', maxWidth: '420px', opacity: 0.95, lineHeight: '1.8' }}>
+          <p style={{ fontSize: '1rem' }}>The smartest way to manage your personal finances and small business expenses. Keep track of every penny in real-time.</p>
+        </div>
+      </div>
+      
+      <div className="auth-form-side animate-fade-in">
+        <div style={{ maxWidth: '420px', width: '100%', margin: '0 auto' }}>
+          <h2 style={{ marginBottom: '12px' }}>Sign In</h2>
+          <p style={{ color: 'var(--text-muted)', marginBottom: '40px', fontSize: '1rem' }}>Welcome back! Please enter your details.</p>
+          
+          {error && (
+            <div className="error-message">
+              {error}
+            </div>
+          )}
+          
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label htmlFor="email">Email Address</label>
+              <input 
+                type="email" 
+                id="email" 
+                className="input-field" 
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
+              <input 
+                type="password" 
+                id="password" 
+                className="input-field" 
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            
+            <button type="submit" className="btn btn-primary" style={{ width: '100%', marginBottom: '24px', marginTop: '8px' }} disabled={loading}>
+              {loading ? 'Signing in...' : 'Sign In'}
+            </button>
+          </form>
+          
+          <p style={{ textAlign: 'center', fontSize: '0.95rem', color: 'var(--text-muted)' }}>
+            Don't have an account?{' '}
+            <Link to="/signup" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: '700', transition: 'var(--transition)' }}>
+              Create one free
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );
-}
+};
+
+export default LoginPage;

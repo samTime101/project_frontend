@@ -1,44 +1,34 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
-import { signup, login } from '../services/auth.service';
 
-export default function SignupPage() {
+const SignupPage = () => {
   const [formData, setFormData] = useState({
     first_name: '',
     last_name: '',
     email: '',
     password: ''
   });
-  const [error, setError] = useState(null);
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const { signup, login } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({...formData, [e.target.name]: e.target.value});
+    setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
-  const handleSignup = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
+    setError('');
     setLoading(true);
     try {
       await signup(formData);
       // Auto login after signup
-      await login(formData.email, formData.password);
+      await login({ email: formData.email, password: formData.password });
       navigate('/');
     } catch (err) {
-      console.error(err);
-      const errors = err.response?.data;
-      if (errors && typeof errors === 'object' && !Array.isArray(errors)) {
-        const msgs = Object.keys(errors).map(k => `${k}: ${errors[k]}`).join(' | ');
-        setError(msgs);
-      } else if (typeof errors === 'string') {
-        setError(`Server Error (${err.response?.status}): Check console`);
-      } else if (Array.isArray(errors)) {
-        setError(errors.join(' | '));
-      } else {
-        setError(err.message || 'Signup failed. Please try again.');
-      }
+      setError(err.response?.data?.detail || Object.values(err.response?.data || {}).flat()[0] || 'Failed to create account.');
     } finally {
       setLoading(false);
     }
@@ -46,66 +36,94 @@ export default function SignupPage() {
 
   return (
     <div className="auth-container">
-      <div className="md-card auth-form">
-        <h2 className="text-center mb-4">Create Account</h2>
-        <p className="text-center text-secondary mb-4">Start managing your expenses</p>
-        
-        {error && <div className="md-card mb-4 text-danger text-center" style={{padding: '0.75rem', borderColor: 'var(--danger-color)'}}>{error}</div>}
-        
-        <form onSubmit={handleSignup}>
-          <div className="flex gap-4 mb-4">
-            <div style={{flex: 1}}>
-              <label>First Name</label>
+      <div className="auth-brand-side">
+        <h1 className="brand-logo">EXPENSER</h1>
+        <p className="brand-slogan">track. save. grow.</p>
+        <div style={{ marginTop: '50px', maxWidth: '420px', opacity: 0.95, lineHeight: '1.8' }}>
+          <p style={{ fontSize: '1rem' }}>Join thousands of users who are taking control of their financial future. Quick, easy, and secure.</p>
+        </div>
+      </div>
+      
+      <div className="auth-form-side animate-fade-in">
+        <div style={{ maxWidth: '420px', width: '100%', margin: '0 auto' }}>
+          <h2 style={{ marginBottom: '12px' }}>Create Account</h2>
+          <p style={{ color: 'var(--text-muted)', marginBottom: '40px', fontSize: '1rem' }}>Start your financial journey with us today.</p>
+          
+          {error && (
+            <div className="error-message">
+              {error}
+            </div>
+          )}
+          
+          <form onSubmit={handleSubmit}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '24px' }}>
+              <div className="form-group" style={{ marginBottom: 0 }}>
+                <label htmlFor="first_name">First Name</label>
+                <input 
+                  type="text" 
+                  id="first_name" 
+                  className="input-field" 
+                  placeholder="John"
+                  value={formData.first_name}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-group" style={{ marginBottom: 0 }}>
+                <label htmlFor="last_name">Last Name</label>
+                <input 
+                  type="text" 
+                  id="last_name" 
+                  className="input-field" 
+                  placeholder="Doe"
+                  value={formData.last_name}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
+            
+            <div className="form-group">
+              <label htmlFor="email">Email Address</label>
               <input 
-                name="first_name"
-                className="md-input" 
-                value={formData.first_name}
+                type="email" 
+                id="email" 
+                className="input-field" 
+                placeholder="you@example.com"
+                value={formData.email}
                 onChange={handleChange}
-                required 
+                required
               />
             </div>
-            <div style={{flex: 1}}>
-              <label>Last Name</label>
+            
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
               <input 
-                name="last_name"
-                className="md-input" 
-                value={formData.last_name}
+                type="password" 
+                id="password" 
+                className="input-field" 
+                placeholder="••••••••"
+                value={formData.password}
                 onChange={handleChange}
-                required 
+                required
               />
             </div>
-          </div>
-          <div className="form-group">
-            <label>Email</label>
-            <input 
-              type="email" 
-              name="email"
-              className="md-input" 
-              value={formData.email}
-              onChange={handleChange}
-              required 
-            />
-          </div>
-          <div className="form-group">
-            <label>Password</label>
-            <input 
-              type="password" 
-              name="password"
-              className="md-input" 
-              value={formData.password}
-              onChange={handleChange}
-              required 
-            />
-          </div>
-          <button type="submit" className="md-button w-full mt-4" disabled={loading}>
-            {loading ? 'Creating Account...' : 'Sign Up'}
-          </button>
-        </form>
-        
-        <p className="text-center mt-4">
-          Already have an account? <Link to="/login" className="text-accent">Sign In</Link>
-        </p>
+            
+            <button type="submit" className="btn btn-primary" style={{ width: '100%', marginBottom: '24px' }} disabled={loading}>
+              {loading ? 'Creating account...' : 'Create Account'}
+            </button>
+          </form>
+          
+          <p style={{ textAlign: 'center', fontSize: '0.95rem', color: 'var(--text-muted)' }}>
+            Already have an account?{' '}
+            <Link to="/login" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: '700', transition: 'var(--transition)' }}>
+              Sign in here
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );
-}
+};
+
+export default SignupPage;
