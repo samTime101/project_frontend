@@ -92,7 +92,7 @@ const ProfilePage = () => {
           </div>
         </div>
 
-        <div className="profile-grid" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px' }}>
+        <div className="profile-grid profile-grid-split">
           <div className="card">
             <h4 style={{ marginBottom: '24px' }}>Edit Personal Details</h4>
             <form onSubmit={handleSubmit}>
@@ -230,10 +230,8 @@ const ProfilePage = () => {
         }
 
         @media (max-width: 992px) {
-          .profile-grid {
-            grid-template-columns: 1fr !ok;
-            display: flex !important;
-            flex-direction: column;
+          .profile-grid-split {
+            grid-template-columns: 1fr;
           }
         }
       `}</style>

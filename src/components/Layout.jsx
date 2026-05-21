@@ -8,7 +8,7 @@ const Layout = ({ children }) => {
   const navigate = useNavigate();
 
   return (
-    <div style={{ minHeight: '100vh', paddingBottom: '90px', background: 'var(--background)' }}>
+    <div style={{ minHeight: '100vh', paddingBottom: '120px', background: 'var(--background)' }}>
       <main className="content-container page-transition">
         {children}
       </main>

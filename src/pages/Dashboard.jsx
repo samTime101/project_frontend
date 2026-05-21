@@ -170,6 +170,10 @@ const Dashboard = () => {
             <div className="icon-box"><Smartphone size={24} /></div>
             <span>Ncell Packs</span>
           </div>
+          <div className="service-item" onClick={() => navigate('/ntc')}>
+            <div className="icon-box"><Smartphone size={24} /></div>
+            <span>NTC Packs</span>
+          </div>
         </div>
       </div>
 

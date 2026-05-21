@@ -94,7 +94,7 @@ const BudgetPage = () => {
     <Layout>
       <div className="section-title">
         <h2>Monthly Budgets</h2>
-        <div style={{ display: 'flex', gap: '12px' }}>
+        <div className="toolbar-actions">
           <button className="btn btn-secondary" onClick={() => exportBudgetsToPDF(budgets, expenses, user)} disabled={budgets.length === 0}>
             <FileText size={20} /> Export PDF
           </button>

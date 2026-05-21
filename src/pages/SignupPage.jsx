@@ -37,9 +37,8 @@ const SignupPage = () => {
   return (
     <div className="auth-container">
       <div className="auth-brand-side">
-        <h1 className="brand-logo">EXPENSER</h1>
-        <p className="brand-slogan">track. save. grow.</p>
-        <div style={{ marginTop: '50px', maxWidth: '420px', opacity: 0.95, lineHeight: '1.8' }}>
+        <img src="/image.png" alt="Expenser Logo" className="brand-logo-img" />
+        <div style={{ marginTop: '16px', maxWidth: '420px', opacity: 0.95, lineHeight: '1.8' }}>
           <p style={{ fontSize: '1rem' }}>Join thousands of users who are taking control of their financial future. Quick, easy, and secure.</p>
         </div>
       </div>

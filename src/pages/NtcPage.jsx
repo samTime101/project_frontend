@@ -1,24 +1,23 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Radio, RefreshCw, Smartphone, Wifi, Wallet } from 'lucide-react';
 import Layout from '../components/Layout';
-import { ncellService } from '../services/ncell.service';
+import { ntcService } from '../services/ntc.service';
 import { useNotification } from '../context/NotificationContext';
 import { useAuth } from '../context/AuthContext';
 import SuccessModal from '../components/SuccessModal';
 
 const EMPTY_CATALOG = { data: [], voice: [] };
 
-const NcellPage = () => {
+const NtcPage = () => {
   const { user, refreshUser } = useAuth();
   const { showNotification } = useNotification();
   const [catalog, setCatalog] = useState(EMPTY_CATALOG);
   const [loadingCatalog, setLoadingCatalog] = useState(true);
   const [activeCategory, setActiveCategory] = useState('data');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [selectedAmount, setSelectedAmount] = useState(null);
+  const [selectedPackageId, setSelectedPackageId] = useState(null);
   const [otpCode, setOtpCode] = useState('');
-  const [otpToken, setOtpToken] = useState('');
-  const [redirectUrl, setRedirectUrl] = useState('');
+  const [otpRequested, setOtpRequested] = useState(false);
   const [sendingOtp, setSendingOtp] = useState(false);
   const [confirming, setConfirming] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -27,15 +26,15 @@ const NcellPage = () => {
 
   const packs = catalog[activeCategory] || [];
   const selectedPack = useMemo(
-    () => packs.find((pack) => pack.amount === selectedAmount) || null,
-    [packs, selectedAmount]
+    () => packs.find((pack) => pack.p_id === selectedPackageId) || null,
+    [packs, selectedPackageId]
   );
   const hasEnoughBalance = selectedPack ? availableBalance >= Number(selectedPack.amount) : false;
 
   const loadCatalog = async () => {
     setLoadingCatalog(true);
     try {
-      const response = await ncellService.getPacks();
+      const response = await ntcService.getPacks();
       setCatalog(response?.data || EMPTY_CATALOG);
     } catch {
       setCatalog(EMPTY_CATALOG);
@@ -49,18 +48,17 @@ const NcellPage = () => {
   }, []);
 
   useEffect(() => {
-    setSelectedAmount((current) => {
-      if (!packs.some((pack) => pack.amount === current)) {
-        return packs[0]?.amount ?? null;
+    setSelectedPackageId((current) => {
+      if (!packs.some((pack) => pack.p_id === current)) {
+        return packs[0]?.p_id ?? null;
       }
       return current;
     });
   }, [packs]);
 
   const resetOtpSession = () => {
-    setOtpToken('');
+    setOtpRequested(false);
     setOtpCode('');
-    setRedirectUrl('');
   };
 
   const handleCategoryChange = (category) => {
@@ -73,8 +71,8 @@ const NcellPage = () => {
     resetOtpSession();
   };
 
-  const handlePackSelect = (amount) => {
-    setSelectedAmount(amount);
+  const handlePackSelect = (packageId) => {
+    setSelectedPackageId(packageId);
     resetOtpSession();
   };
 
@@ -87,17 +85,16 @@ const NcellPage = () => {
 
     setSendingOtp(true);
     try {
-      const response = await ncellService.sendOtp({
+      const response = await ntcService.sendOtp({
         phone_number: phoneNumber,
         pack_type: activeCategory,
-        amount: selectedPack.amount,
+        package_id: selectedPack.p_id,
       });
 
-      setOtpToken(response.token || '');
-      setRedirectUrl('');
-      showNotification(`OTP sent to ${response.phoneNumber}.`, 'success');
+      setOtpRequested(true);
+      showNotification(response.message || `OTP sent to ${response.phoneNumber}.`, 'success');
     } catch {
-      setOtpToken('');
+      setOtpRequested(false);
     } finally {
       setSendingOtp(false);
     }
@@ -105,30 +102,27 @@ const NcellPage = () => {
 
   const handleConfirmPurchase = async (event) => {
     event.preventDefault();
-    if (!selectedPack || !otpToken) {
+    if (!selectedPack || !otpRequested) {
       showNotification('Send OTP first.', 'warning');
       return;
     }
 
     setConfirming(true);
     try {
-      const response = await ncellService.confirmPurchase({
+      await ntcService.confirmPurchase({
         phone_number: phoneNumber,
         pack_type: activeCategory,
-        amount: selectedPack.amount,
-        token: otpToken,
+        package_id: selectedPack.p_id,
         otp_code: otpCode,
       });
 
-      setRedirectUrl('');
       setSuccessMessage(
-        `${selectedPack.title} purchased successfully and saved to transfer history as Ncell Datapack${response.providerTransactionId ? ` (${response.providerTransactionId})` : ''}.`
+        `${selectedPack.title} purchased successfully and saved to transfer history as Nepal Telecom.`
       );
       setShowSuccess(true);
+      resetOtpSession();
       await refreshUser();
-      showNotification('Ncell pack purchased successfully.', 'success');
-    } catch {
-      setRedirectUrl('');
+      showNotification('Nepal Telecom pack purchased successfully.', 'success');
     } finally {
       setConfirming(false);
     }
@@ -139,8 +133,8 @@ const NcellPage = () => {
       <SuccessModal isOpen={showSuccess} message={successMessage} onClose={() => setShowSuccess(false)} />
       <div className="section-title">
         <div>
-          <h2>Ncell Packs</h2>
-          <p>Buy Ncell data and voice packs.</p>
+          <h2>Nepal Telecom Packs</h2>
+          <p>Buy Nepal Telecom data and voice packs.</p>
         </div>
       </div>
 
@@ -148,12 +142,12 @@ const NcellPage = () => {
         <div className="ncell-hero-top">
           <div>
             <div className="ncell-kicker">Telecom Top-up</div>
-            <h3>Buy Ncell Data and Voice Packs</h3>
+            <h3>Buy Nepal Telecom Data and Voice Packs</h3>
             <p>Enter your number, choose a pack, and confirm the code sent to your phone.</p>
           </div>
           <div className="ncell-badge">
             <Smartphone size={18} />
-            Ncell
+            NTC
           </div>
         </div>
       </div>
@@ -197,7 +191,7 @@ const NcellPage = () => {
       <div className="service-card">
         <form onSubmit={handleSendOtp} className="ncell-form-grid">
           <div className="form-group">
-            <label>Ncell Number</label>
+            <label>Nepal Telecom Number</label>
             <input
               className="input-field"
               placeholder="98XXXXXXXX"
@@ -221,14 +215,14 @@ const NcellPage = () => {
         <div className="ncell-pack-grid">
           {packs.map((pack) => (
             <button
-              key={`${activeCategory}-${pack.amount}-${pack.slug}`}
+              key={`${activeCategory}-${pack.p_id}`}
               type="button"
-              className={`ncell-pack-card ${selectedAmount === pack.amount ? 'active' : ''}`}
-              onClick={() => handlePackSelect(pack.amount)}
+              className={`ncell-pack-card ${selectedPackageId === pack.p_id ? 'active' : ''}`}
+              onClick={() => handlePackSelect(pack.p_id)}
             >
               <span className="ncell-pack-price">रू {pack.amount}</span>
               <strong>{pack.title}</strong>
-              <small>{activeCategory === 'data' ? 'Data Pack' : 'Voice Pack'}</small>
+              <small>{pack.validity}</small>
             </button>
           ))}
         </div>
@@ -260,18 +254,18 @@ const NcellPage = () => {
           </div>
 
           <div className="ncell-action-row">
-            <button type="submit" className="btn btn-primary" disabled={confirming || !otpToken || !hasEnoughBalance}>
+            <button type="submit" className="btn btn-primary" disabled={confirming || !otpRequested || !hasEnoughBalance}>
               {confirming ? 'Verifying...' : 'Verify OTP'}
             </button>
           </div>
         </form>
 
         <div className="ncell-status-box">
-          <p>{otpToken ? 'Enter the code sent to your phone to complete the purchase.' : 'Tap Send OTP to receive a verification code on your phone.'}</p>
+          <p>{otpRequested ? 'Enter the code sent to your phone to complete the purchase.' : 'Tap Send OTP to receive a verification code on your phone.'}</p>
         </div>
       </div>
     </Layout>
   );
 };
 
-export default NcellPage;
+export default NtcPage;

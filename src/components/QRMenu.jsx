@@ -264,7 +264,7 @@ const QRMenu = () => {
                   <input type="number" className="input-field" placeholder="Enter amount" value={amount} onChange={(e) => setAmount(e.target.value)} />
                   <div className="amount-chips">
                     {[10, 50, 100, 500].map(v => (
-                      <button key={v} className={`chip-btn ${amount === String(v) ? 'active' : ''}`} onClick={() => setAmount(v)}>₹{v}</button>
+                      <button key={v} className={`chip-btn ${amount === String(v) ? 'active' : ''}`} onClick={() => setAmount(v)}>रू{v}</button>
                     ))}
                     <button className="chip-btn" onClick={() => setAmount('')}>Clear</button>
                   </div>

@@ -27,56 +27,55 @@ const LoginPage = () => {
   return (
     <div className="auth-container">
       <div className="auth-brand-side">
-        <h1 className="brand-logo">EXPENSER</h1>
-        <p className="brand-slogan">track. save. grow.</p>
-        <div style={{ marginTop: '50px', maxWidth: '420px', opacity: 0.95, lineHeight: '1.8' }}>
-          <p style={{ fontSize: '1rem' }}>The smartest way to manage your personal finances and small business expenses. Keep track of every penny in real-time.</p>
+        <img src="/image.png" alt="Expenser Logo" className="brand-logo-img" />
+        <div style={{ marginTop: '16px', maxWidth: '420px', opacity: 0.95, lineHeight: '1.8' }}>
+          <p style={{ fontSize: '1rem' }}>The smartest way to manage your personal finances and small business expenses. Keep track of every penny in real time.</p>
         </div>
       </div>
-      
+
       <div className="auth-form-side animate-fade-in">
         <div style={{ maxWidth: '420px', width: '100%', margin: '0 auto' }}>
           <h2 style={{ marginBottom: '12px' }}>Sign In</h2>
           <p style={{ color: 'var(--text-muted)', marginBottom: '40px', fontSize: '1rem' }}>Welcome back! Please enter your details.</p>
-          
+
           {error && (
             <div className="error-message">
               {error}
             </div>
           )}
-          
+
           <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label htmlFor="email">Email Address</label>
-              <input 
-                type="email" 
-                id="email" 
-                className="input-field" 
+              <input
+                type="email"
+                id="email"
+                className="input-field"
                 placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
             </div>
-            
+
             <div className="form-group">
               <label htmlFor="password">Password</label>
-              <input 
-                type="password" 
-                id="password" 
-                className="input-field" 
+              <input
+                type="password"
+                id="password"
+                className="input-field"
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
             </div>
-            
+
             <button type="submit" className="btn btn-primary" style={{ width: '100%', marginBottom: '24px', marginTop: '8px' }} disabled={loading}>
               {loading ? 'Signing in...' : 'Sign In'}
             </button>
           </form>
-          
+
           <p style={{ textAlign: 'center', fontSize: '0.95rem', color: 'var(--text-muted)' }}>
             Don't have an account?{' '}
             <Link to="/signup" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: '700', transition: 'var(--transition)' }}>

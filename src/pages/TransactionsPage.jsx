@@ -166,7 +166,7 @@ const TransactionsPage = () => {
     <Layout>
       <SuccessModal isOpen={showSuccess} message={successMsg} onClose={() => setShowSuccess(false)} />
       <div className="section-title">
-        <h2 style={{ fontSize: '1.8rem' }}>Money Transfers</h2>
+        <h2>Money Transfers</h2>
         <div className="toolbar-actions">
           <button className="btn btn-secondary" onClick={() => exportTransactionsToPDF(visibleTransactions, user)} disabled={visibleTransactions.length === 0}>
             <FileText size={20} /> Export PDF

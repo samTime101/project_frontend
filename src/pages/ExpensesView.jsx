@@ -131,8 +131,8 @@ const ExpensesView = () => {
   return (
     <Layout>
       <div className="section-title">
-        <h2 style={{ fontSize: '1.8rem' }}>Expenses & Income</h2>
-        <div style={{ display: 'flex', gap: '12px' }}>
+        <h2>Expenses & Income</h2>
+        <div className="toolbar-actions">
           <button className="btn btn-secondary" onClick={() => exportExpensesToPDF(visibleExpenses, user)} disabled={visibleExpenses.length === 0}>
             <FileText size={20} /> Export PDF
           </button>
